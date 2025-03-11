@@ -1,12 +1,9 @@
 if (typeof Telegram !== "undefined" && Telegram.WebApp) {
     const tg = Telegram.WebApp;
-
-    // Разворачиваем Mini App на весь экран
     tg.expand();
 
-    // При нажатии на кнопку "Начать заново" перезапускаем игру
     tg.onEvent("mainButtonClicked", () => {
-        location.reload(); // Перезагружаем страницу (перезапуск игры)
+        location.reload(); // Перезапуск игры
     });
 } else {
     console.error("Telegram WebApp не доступен. Убедитесь, что игра открыта внутри Telegram.");
@@ -19,43 +16,44 @@ gameCanvas.width = 320;
 gameCanvas.height = 480;
 document.body.appendChild(gameCanvas);
 
-// Переменные игры
-let birdY = 150;          // Начальная позиция птички по Y
-let birdVelocity = 0;     // Начальная скорость птички
-const gravity = 0.5;      // Сила гравитации
-const jump = -8;          // Сила прыжка
-let pipes = [];           // Массив для труб
-let score = 0;            // Счет
-let gameRunning = true;   // Статус игры
-let pipeGap = 100;        // Расстояние между трубами
-let pipeWidth = 50;       // Ширина труб
-let pipeInterval = 1500;  // Интервал появления новых труб
-let lastPipeTime = Date.now(); // Время последнего появления труб
+// Получаем кнопку из HTML
+const restartButton = document.getElementById("restartButton");
 
-// Обработчик клика по экрану или нажатия пробела
+// Переменные игры
+let birdY = 150;
+let birdVelocity = 0;
+const gravity = 0.5;
+const jump = -8;
+let pipes = [];
+let score = 0;
+let gameRunning = true;
+let pipeGap = 100;
+let pipeWidth = 50;
+let pipeInterval = 1500;
+let lastPipeTime = Date.now();
+
+// Функция для прыжка
 function flap() {
-    birdVelocity = jump; // Птичка подскакивает
+    if (gameRunning) {
+        birdVelocity = jump;
+    }
 }
 
 document.addEventListener("keydown", (e) => {
     if (e.code === "Space") {
-        flap(); // Нажатие пробела
+        flap();
     }
 });
 
-gameCanvas.addEventListener("click", flap); // Клик по холсту
+gameCanvas.addEventListener("click", flap);
 
-// Функция для создания новых труб
+// Функция создания труб
 function createPipe() {
     const pipeHeight = Math.floor(Math.random() * (gameCanvas.height - pipeGap));
-    pipes.push({
-        x: gameCanvas.width,
-        top: pipeHeight,
-        bottom: pipeHeight + pipeGap
-    });
+    pipes.push({ x: gameCanvas.width, top: pipeHeight, bottom: pipeHeight + pipeGap });
 }
 
-// Функция для обновления труб
+// Функция обновления труб
 function updatePipes() {
     if (Date.now() - lastPipeTime > pipeInterval) {
         createPipe();
@@ -63,122 +61,87 @@ function updatePipes() {
     }
 
     pipes.forEach((pipe, index) => {
-        pipe.x -= 2; // Двигаем трубы влево
+        pipe.x -= 2;
 
-        // Если труба вышла за пределы экрана, удаляем её
         if (pipe.x + pipeWidth < 0) {
             pipes.splice(index, 1);
-            score++; // Увеличиваем счет
+            score++;
         }
     });
 }
 
-// Функция для проверки столкновений
+// Функция проверки столкновений
 function checkCollisions() {
     pipes.forEach((pipe) => {
         if (50 + 10 > pipe.x && 50 - 10 < pipe.x + pipeWidth) {
             if (birdY < pipe.top || birdY + 10 > pipe.bottom) {
-                gameRunning = false; // Столкновение с трубой
-                showRestartButton(); // Показать кнопку "Начать заново"
+                endGame();
             }
         }
     });
 
-    // Проверка на столкновение с землей
     if (birdY > gameCanvas.height) {
-        gameRunning = false;
-        showRestartButton(); // Показать кнопку "Начать заново"
+        endGame();
     }
 }
 
-// Функция для отображения кнопки "Начать заново"
-function showRestartButton() {
+// Функция завершения игры
+function endGame() {
+    gameRunning = false;
+
+    // Показываем кнопку в WebApp
     if (typeof Telegram !== "undefined" && Telegram.WebApp) {
         const tg = Telegram.WebApp;
-        tg.MainButton.setText("Начать заново"); // Текст кнопки
-        tg.MainButton.show(); // Показать кнопку
+        tg.MainButton.setText("Начать заново");
+        tg.MainButton.show();
     }
+
+    // Показываем HTML-кнопку
+    restartButton.style.display = "block";
 }
 
-// Основная функция игры (обновление экрана)
+// Основная функция игры
 function gameLoop() {
     if (!gameRunning) {
         ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
         ctx.font = "30px Arial";
         ctx.fillStyle = "#000";
         ctx.fillText("Игра окончена! Счет: " + score, 50, 240);
-
         return;
     }
 
-    birdVelocity += gravity; // Применяем гравитацию
-    birdY += birdVelocity;   // Обновляем позицию птички
-
-    // Ограничиваем положение птички, чтобы она не выходила за пределы экрана
+    birdVelocity += gravity;
+    birdY += birdVelocity;
     if (birdY < 0) birdY = 0;
     if (birdY > gameCanvas.height) birdY = gameCanvas.height;
 
-    // Очистка экрана перед отрисовкой нового кадра
     ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
 
-    // Рисуем птичку (круг)
     ctx.beginPath();
     ctx.arc(50, birdY, 10, 0, Math.PI * 2);
-    ctx.fillStyle = "#FF0"; // Цвет птички
+    ctx.fillStyle = "#FF0";
     ctx.fill();
     ctx.closePath();
 
-    // Обновляем счет
     ctx.font = "20px Arial";
     ctx.fillStyle = "#000";
     ctx.fillText("Счет: " + score, 10, 30);
 
-    // Обновляем трубы
     updatePipes();
 
-    // Рисуем трубы
     pipes.forEach((pipe) => {
         ctx.fillStyle = "#00F";
-        ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top); // Верхняя труба
-        ctx.fillRect(pipe.x, pipe.bottom, pipeWidth, gameCanvas.height - pipe.bottom); // Нижняя труба
+        ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
+        ctx.fillRect(pipe.x, pipe.bottom, pipeWidth, gameCanvas.height - pipe.bottom);
     });
 
-    // Проверка на столкновения
     checkCollisions();
 }
 
-// Вызов основной функции игры 60 раз в секунду
+// Запуск игры
 setInterval(gameLoop, 1000 / 60);
-// Создаем ссылку на кнопку
-const restartButton = document.getElementById("restartButton");
 
-// Функция для отображения кнопки "Начать заново"
-function showRestartButton() {
-    restartButton.style.display = "block"; // Показываем кнопку
-}
-
-// Добавляем обработчик события для кнопки
+// Обработчик нажатия кнопки
 restartButton.addEventListener("click", () => {
-    location.reload(); // Перезагружаем страницу
+    location.reload();
 });
-
-// Пример функции, которая проверяет столкновения
-function checkCollisions() {
-    // Когда птичка столкнется с трубой
-    if (gameRunning === false) {
-        showRestartButton(); // Показываем кнопку
-    }
-}
-
-// Ваш основной игровой цикл
-function gameLoop() {
-    // Логика игры...
-
-    // Проверка столкновений
-    checkCollisions();
-
-    // Если столкновение произошло, показываем кнопку "Начать заново"
-    if (gameRunning === false) {
-        showRestartButton(); // Показываем кнопку
-    }
-}
