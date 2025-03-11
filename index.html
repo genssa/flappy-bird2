@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flappy Bird TG</title>
-    <!-- Скрипт подключен с атрибутом defer -->
     <script src="script.js" defer></script>
     <style>
         body {
@@ -13,9 +12,30 @@
             justify-content: center;
             height: 100vh;
             background-color: #70c5ce;
+            margin: 0;
+        }
+
+        button {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: green;
+            color: white;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none; /* Кнопка скрыта по умолчанию */
+        }
+
+        button:hover {
+            background-color: darkgreen;
         }
     </style>
 </head>
 <body>
+    <button id="restartButton">Начать заново</button> <!-- Кнопка для перезапуска -->
 </body>
 </html>
