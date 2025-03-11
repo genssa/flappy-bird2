@@ -1,3 +1,4 @@
+// Проверка на Telegram WebApp
 if (typeof Telegram !== "undefined" && Telegram.WebApp) {
     const tg = Telegram.WebApp;
     console.log("Telegram WebApp успешно загружен.");
@@ -10,6 +11,7 @@ if (typeof Telegram !== "undefined" && Telegram.WebApp) {
     console.error("Telegram WebApp не доступен. Убедитесь, что игра открыта внутри Telegram.");
 }
 
+// Создание канваса для игры
 const gameCanvas = document.createElement("canvas");
 const ctx = gameCanvas.getContext("2d");
 gameCanvas.width = 320;
@@ -28,17 +30,16 @@ let pipeWidth = 50;
 let pipeInterval = 1500;
 let lastPipeTime = Date.now();
 
-const restartButton = document.getElementById("restartButton");
-restartButton.style.display = "none";
-
 // Функция для сохранения цвета птички
 function saveBirdColor(color) {
+    console.log("Сохраняю цвет птички:", color);
     localStorage.setItem("birdColor", color);
 }
 
 // Функция для загрузки цвета птички
 function getSavedBirdColor() {
     const savedColor = localStorage.getItem("birdColor");
+    console.log("Загружен цвет птички из localStorage:", savedColor);
     return savedColor ? savedColor : "#FF0000";  // Если нет сохранённого цвета, по умолчанию красный
 }
 
@@ -77,6 +78,7 @@ colorChangeButton.addEventListener("click", () => {
     }
 });
 
+// Функция для изменения положения птички
 function flap() {
     if (gameRunning) {
         birdVelocity = jump;
@@ -89,11 +91,13 @@ document.addEventListener("keydown", (e) => {
 
 gameCanvas.addEventListener("click", flap);
 
+// Функция для создания трубы
 function createPipe() {
     const pipeHeight = Math.floor(Math.random() * (gameCanvas.height - pipeGap));
     pipes.push({ x: gameCanvas.width, top: pipeHeight, bottom: pipeHeight + pipeGap });
 }
 
+// Функция для обновления труб
 function updatePipes() {
     if (Date.now() - lastPipeTime > pipeInterval) {
         createPipe();
@@ -109,6 +113,7 @@ function updatePipes() {
     });
 }
 
+// Функция для проверки коллизий
 function checkCollisions() {
     pipes.forEach((pipe) => {
         if (50 + 10 > pipe.x && 50 - 10 < pipe.x + pipeWidth) {
@@ -120,19 +125,26 @@ function checkCollisions() {
     if (birdY > gameCanvas.height) endGame();
 }
 
+// Функция для окончания игры
 function endGame() {
     gameRunning = false;
     showRestartButton();
 }
 
+// Отображаем кнопку перезапуска
 function showRestartButton() {
     restartButton.style.display = "block";
 }
+
+// Перезапуск игры
+const restartButton = document.getElementById("restartButton");
+restartButton.style.display = "none";
 
 restartButton.addEventListener("click", () => {
     location.reload();
 });
 
+// Основной игровой цикл
 function gameLoop() {
     if (!gameRunning) {
         ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
@@ -169,4 +181,5 @@ function gameLoop() {
     checkCollisions();
 }
 
+// Запуск игрового цикла
 setInterval(gameLoop, 1000 / 60);
