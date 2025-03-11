@@ -1,17 +1,20 @@
-// Получаем доступ к Telegram API
-const tg = window.Telegram.WebApp;
+if (typeof Telegram !== "undefined" && Telegram.WebApp) {
+    const tg = Telegram.WebApp;
+    
+    // Разворачиваем Mini App на весь экран
+    tg.expand(); 
 
-// Разворачиваем Mini App на весь экран
-tg.expand();
+    // Отображаем кнопку "Начать заново" внизу экрана
+    tg.MainButton.setText("Начать заново");
+    tg.MainButton.show();
 
-// Отображаем кнопку "Начать заново" внизу экрана
-tg.MainButton.setText("Начать заново");
-tg.MainButton.show();
-
-// При нажатии на кнопку "Начать заново" перезапускаем игру
-tg.onEvent("mainButtonClicked", () => {
-    location.reload(); // Перезагружаем страницу (перезапуск игры)
-});
+    // При нажатии на кнопку "Начать заново" перезапускаем игру
+    tg.onEvent("mainButtonClicked", () => {
+        location.reload(); // Перезагружаем страницу (перезапуск игры)
+    });
+} else {
+    console.error("Telegram WebApp не доступен. Убедитесь, что игра открыта внутри Telegram.");
+}
 
 // Создаем холст для игры
 const gameCanvas = document.createElement("canvas");
