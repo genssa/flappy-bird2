@@ -100,6 +100,12 @@ function gameLoop() {
         ctx.font = "30px Arial";
         ctx.fillStyle = "#000";
         ctx.fillText("Игра окончена! Счет: " + score, 50, 240);
+        
+        // Показываем кнопку "Начать заново" после окончания игры
+        if (typeof Telegram !== "undefined" && Telegram.WebApp) {
+            tg.MainButton.show();
+        }
+
         return;
     }
 
@@ -131,4 +137,13 @@ function gameLoop() {
     // Рисуем трубы
     pipes.forEach((pipe) => {
         ctx.fillStyle = "#00F";
-        ctx.fillRect(pip
+        ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top); // Верхняя труба
+        ctx.fillRect(pipe.x, pipe.bottom, pipeWidth, gameCanvas.height - pipe.bottom); // Нижняя труба
+    });
+
+    // Проверка на столкновения
+    checkCollisions();
+}
+
+// Вызов основной функции игры 60 раз в секунду
+setInterval(gameLoop, 1000 / 60);
