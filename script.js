@@ -149,3 +149,36 @@ function gameLoop() {
 
 // Вызов основной функции игры 60 раз в секунду
 setInterval(gameLoop, 1000 / 60);
+// Создаем ссылку на кнопку
+const restartButton = document.getElementById("restartButton");
+
+// Функция для отображения кнопки "Начать заново"
+function showRestartButton() {
+    restartButton.style.display = "block"; // Показываем кнопку
+}
+
+// Добавляем обработчик события для кнопки
+restartButton.addEventListener("click", () => {
+    location.reload(); // Перезагружаем страницу
+});
+
+// Пример функции, которая проверяет столкновения
+function checkCollisions() {
+    // Когда птичка столкнется с трубой
+    if (gameRunning === false) {
+        showRestartButton(); // Показываем кнопку
+    }
+}
+
+// Ваш основной игровой цикл
+function gameLoop() {
+    // Логика игры...
+
+    // Проверка столкновений
+    checkCollisions();
+
+    // Если столкновение произошло, показываем кнопку "Начать заново"
+    if (gameRunning === false) {
+        showRestartButton(); // Показываем кнопку
+    }
+}
