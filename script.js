@@ -104,7 +104,7 @@ function gameLoop() {
     ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
     ctx.beginPath();
     ctx.arc(50, birdY, 10, 0, Math.PI * 2);
-    ctx.fillStyle = "#F00";
+    ctx.fillStyle = "#FF6347";
     ctx.fill();
     ctx.closePath();
 
