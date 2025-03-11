@@ -1,25 +1,21 @@
 if (typeof Telegram !== "undefined" && Telegram.WebApp) {
     const tg = Telegram.WebApp;
+    console.log("Telegram WebApp успешно загружен.");
     tg.expand();
 
     tg.onEvent("mainButtonClicked", () => {
-        location.reload(); // Перезапуск игры
+        location.reload();
     });
 } else {
     console.error("Telegram WebApp не доступен. Убедитесь, что игра открыта внутри Telegram.");
 }
 
-// Создаем холст для игры
 const gameCanvas = document.createElement("canvas");
 const ctx = gameCanvas.getContext("2d");
 gameCanvas.width = 320;
 gameCanvas.height = 480;
 document.body.appendChild(gameCanvas);
 
-// Получаем кнопку из HTML
-const restartButton = document.getElementById("restartButton");
-
-// Переменные игры
 let birdY = 150;
 let birdVelocity = 0;
 const gravity = 0.5;
@@ -32,7 +28,9 @@ let pipeWidth = 50;
 let pipeInterval = 1500;
 let lastPipeTime = Date.now();
 
-// Функция для прыжка
+const restartButton = document.getElementById("restartButton");
+restartButton.style.display = "none";
+
 function flap() {
     if (gameRunning) {
         birdVelocity = jump;
@@ -40,20 +38,16 @@ function flap() {
 }
 
 document.addEventListener("keydown", (e) => {
-    if (e.code === "Space") {
-        flap();
-    }
+    if (e.code === "Space") flap();
 });
 
 gameCanvas.addEventListener("click", flap);
 
-// Функция создания труб
 function createPipe() {
     const pipeHeight = Math.floor(Math.random() * (gameCanvas.height - pipeGap));
     pipes.push({ x: gameCanvas.width, top: pipeHeight, bottom: pipeHeight + pipeGap });
 }
 
-// Функция обновления труб
 function updatePipes() {
     if (Date.now() - lastPipeTime > pipeInterval) {
         createPipe();
@@ -62,7 +56,6 @@ function updatePipes() {
 
     pipes.forEach((pipe, index) => {
         pipe.x -= 2;
-
         if (pipe.x + pipeWidth < 0) {
             pipes.splice(index, 1);
             score++;
@@ -70,7 +63,6 @@ function updatePipes() {
     });
 }
 
-// Функция проверки столкновений
 function checkCollisions() {
     pipes.forEach((pipe) => {
         if (50 + 10 > pipe.x && 50 - 10 < pipe.x + pipeWidth) {
@@ -79,28 +71,22 @@ function checkCollisions() {
             }
         }
     });
-
-    if (birdY > gameCanvas.height) {
-        endGame();
-    }
+    if (birdY > gameCanvas.height) endGame();
 }
 
-// Функция завершения игры
 function endGame() {
     gameRunning = false;
+    showRestartButton();
+}
 
-    // Показываем кнопку в WebApp
-    if (typeof Telegram !== "undefined" && Telegram.WebApp) {
-        const tg = Telegram.WebApp;
-        tg.MainButton.setText("Начать заново");
-        tg.MainButton.show();
-    }
-
-    // Показываем HTML-кнопку
+function showRestartButton() {
     restartButton.style.display = "block";
 }
 
-// Основная функция игры
+restartButton.addEventListener("click", () => {
+    location.reload();
+});
+
 function gameLoop() {
     if (!gameRunning) {
         ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
@@ -116,7 +102,6 @@ function gameLoop() {
     if (birdY > gameCanvas.height) birdY = gameCanvas.height;
 
     ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-
     ctx.beginPath();
     ctx.arc(50, birdY, 10, 0, Math.PI * 2);
     ctx.fillStyle = "#FF0";
@@ -138,10 +123,4 @@ function gameLoop() {
     checkCollisions();
 }
 
-// Запуск игры
 setInterval(gameLoop, 1000 / 60);
-
-// Обработчик нажатия кнопки
-restartButton.addEventListener("click", () => {
-    location.reload();
-});
