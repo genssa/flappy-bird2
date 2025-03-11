@@ -1,7 +1,6 @@
-// Проверка, доступен ли Telegram WebApp API
 if (typeof Telegram !== "undefined" && Telegram.WebApp) {
     const tg = Telegram.WebApp;
-
+    
     // Разворачиваем Mini App на весь экран
     tg.expand(); 
 
@@ -32,6 +31,10 @@ const jump = -8;          // Сила прыжка
 let pipes = [];           // Массив для труб
 let score = 0;            // Счет
 let gameRunning = true;   // Статус игры
+let pipeGap = 100;        // Расстояние между трубами
+let pipeWidth = 50;       // Ширина труб
+let pipeInterval = 1500;  // Интервал появления новых труб
+let lastPipeTime = Date.now(); // Время последнего появления труб
 
 // Обработчик клика по экрану или нажатия пробела
 function flap() {
@@ -46,67 +49,57 @@ document.addEventListener("keydown", (e) => {
 
 gameCanvas.addEventListener("click", flap); // Клик по холсту
 
-// Функция для создания труб
+// Функция для создания новых труб
 function createPipe() {
-    const pipeHeight = Math.floor(Math.random() * (gameCanvas.height / 2)); // Рандомная высота трубы
+    const pipeHeight = Math.floor(Math.random() * (gameCanvas.height - pipeGap));
     pipes.push({
         x: gameCanvas.width,
         top: pipeHeight,
-        bottom: gameCanvas.height - pipeHeight - 100, // Разрыв между трубами
-        width: 30,
-        speed: 2
+        bottom: pipeHeight + pipeGap
     });
 }
 
 // Функция для обновления труб
 function updatePipes() {
-    for (let i = 0; i < pipes.length; i++) {
-        pipes[i].x -= pipes[i].speed; // Двигаем трубу влево
+    if (Date.now() - lastPipeTime > pipeInterval) {
+        createPipe();
+        lastPipeTime = Date.now();
+    }
 
-        // Если труба выходит за экран, удаляем ее
-        if (pipes[i].x + pipes[i].width < 0) {
-            pipes.splice(i, 1);
-            score++; // Увеличиваем счет за каждую пройденную трубу
-            i--; // Корректируем индекс после удаления
+    pipes.forEach((pipe, index) => {
+        pipe.x -= 2; // Двигаем трубы влево
+
+        // Если труба вышла за пределы экрана, удаляем её
+        if (pipe.x + pipeWidth < 0) {
+            pipes.splice(index, 1);
+            score++; // Увеличиваем счет
         }
-    }
+    });
 }
 
-// Функция для отрисовки труб
-function drawPipes() {
-    for (let i = 0; i < pipes.length; i++) {
-        // Верхняя труба
-        ctx.fillStyle = "#00F";
-        ctx.fillRect(pipes[i].x, 0, pipes[i].width, pipes[i].top);
-
-        // Нижняя труба
-        ctx.fillStyle = "#00F";
-        ctx.fillRect(pipes[i].x, gameCanvas.height - pipes[i].bottom, pipes[i].width, pipes[i].bottom);
-    }
-}
-
-// Функция для проверки столкновений с трубами
+// Функция для проверки столкновений
 function checkCollisions() {
-    for (let i = 0; i < pipes.length; i++) {
-        if (
-            birdY < pipes[i].top || // Если птичка выше верхней трубы
-            birdY + 10 > gameCanvas.height - pipes[i].bottom // Если птичка ниже нижней трубы
-        ) {
-            if (50 > pipes[i].x && 50 < pipes[i].x + pipes[i].width) { // Если птичка в пределах трубы
-                gameRunning = false; // Конец игры
+    pipes.forEach((pipe) => {
+        if (50 + 10 > pipe.x && 50 - 10 < pipe.x + pipeWidth) {
+            if (birdY < pipe.top || birdY + 10 > pipe.bottom) {
+                gameRunning = false; // Столкновение с трубой
             }
         }
+    });
+
+    // Проверка на столкновение с землей
+    if (birdY > gameCanvas.height) {
+        gameRunning = false;
     }
 }
 
 // Основная функция игры (обновление экрана)
 function gameLoop() {
     if (!gameRunning) {
-        ctx.font = "40px Arial";
-        ctx.fillStyle = "#F00";
-        ctx.fillText("Игра завершена", 50, gameCanvas.height / 2);
-        ctx.font = "20px Arial";
-        ctx.fillText("Нажмите 'Начать заново'", 70, gameCanvas.height / 2 + 40);
+        ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+        ctx.font = "30px Arial";
+        ctx.fillStyle = "#000";
+        ctx.fillText("Игра окончена! Счет: " + score, 50, 240);
         return;
     }
 
@@ -127,21 +120,15 @@ function gameLoop() {
     ctx.fill();
     ctx.closePath();
 
-    // Отрисовываем и обновляем трубы
-    updatePipes();
-    drawPipes();
-
-    // Проверка на столкновение с трубами
-    checkCollisions();
-
     // Обновляем счет
     ctx.font = "20px Arial";
     ctx.fillStyle = "#000";
     ctx.fillText("Счет: " + score, 10, 30);
-}
 
-// Вызов основной функции игры 60 раз в секунду
-setInterval(gameLoop, 1000 / 60);
+    // Обновляем трубы
+    updatePipes();
 
-// Генерация труб каждые 2 секунды
-setInterval(createPipe, 2000);
+    // Рисуем трубы
+    pipes.forEach((pipe) => {
+        ctx.fillStyle = "#00F";
+        ctx.fillRect(pip
