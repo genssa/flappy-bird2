@@ -1,12 +1,8 @@
 if (typeof Telegram !== "undefined" && Telegram.WebApp) {
     const tg = Telegram.WebApp;
-    
-    // Разворачиваем Mini App на весь экран
-    tg.expand(); 
 
-    // Отображаем кнопку "Начать заново" внизу экрана
-    tg.MainButton.setText("Начать заново");
-    tg.MainButton.show();
+    // Разворачиваем Mini App на весь экран
+    tg.expand();
 
     // При нажатии на кнопку "Начать заново" перезапускаем игру
     tg.onEvent("mainButtonClicked", () => {
@@ -100,10 +96,12 @@ function gameLoop() {
         ctx.font = "30px Arial";
         ctx.fillStyle = "#000";
         ctx.fillText("Игра окончена! Счет: " + score, 50, 240);
-        
+
         // Показываем кнопку "Начать заново" после окончания игры
         if (typeof Telegram !== "undefined" && Telegram.WebApp) {
-            tg.MainButton.show();
+            const tg = Telegram.WebApp;
+            tg.MainButton.setText("Начать заново"); // Текст кнопки
+            tg.MainButton.show(); // Показать кнопку
         }
 
         return;
