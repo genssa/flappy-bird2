@@ -11,7 +11,7 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background: linear-gradient(to bottom, #87CEEB, #1E90FF); /* Градиент неба */
+            background: linear-gradient(to bottom, #a0e9ff, #70c5ce); /* Градиентный фон */
             margin: 0;
         }
 
@@ -21,25 +21,24 @@
             left: 50%;
             transform: translateX(-50%);
             padding: 12px 24px;
-            background: linear-gradient(to bottom, #4CAF50, #388E3C); /* Градиент для кнопки */
+            background-color: #28a745; /* Зелёный цвет */
             color: white;
             font-size: 18px;
-            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            display: none;
-            max-width: 80%;
+            display: none; /* Кнопка скрыта по умолчанию */
+            max-width: 80%; /* Ограничиваем ширину */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-            transition: 0.3s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease;
         }
 
         button:hover {
-            background: linear-gradient(to bottom, #45A049, #2E7D32);
-            transform: translateX(-50%) scale(1.05);
+            background-color: #218838; /* Тёмно-зелёный при наведении */
         }
 
         @media (max-width: 480px) {
@@ -51,7 +50,6 @@
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
     <button id="restartButton">Начать заново</button> <!-- Кнопка для перезапуска -->
 </body>
 </html>
