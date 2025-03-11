@@ -13,6 +13,7 @@
             height: 100vh;
             background: linear-gradient(to bottom, #a0e9ff, #70c5ce); /* Градиентный фон */
             margin: 0;
+            position: relative;
         }
 
         button {
@@ -35,6 +36,7 @@
             text-overflow: ellipsis;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: background 0.3s ease;
+            z-index: 9999; /* Обеспечивает, чтобы кнопка была на переднем плане */
         }
 
         button:hover {
@@ -50,6 +52,11 @@
     </style>
 </head>
 <body>
-    <button id="restartButton">Начать заново</button> <!-- Кнопка для перезапуска -->
+    <!-- Кнопка для перезапуска игры -->
+    <button id="restartButton">Начать заново</button> 
+
+    <!-- Кнопка для изменения цвета птички -->
+    <button id="colorChangeButton">Изменить цвет птички</button> 
+
 </body>
 </html>
