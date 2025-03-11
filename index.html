@@ -23,15 +23,26 @@
             padding: 10px 20px;
             background-color: green;
             color: white;
-            font-size: 20px;
+            font-size: 18px;  /* Уменьшаем размер шрифта */
             border: none;
             border-radius: 5px;
             cursor: pointer;
             display: none; /* Кнопка скрыта по умолчанию */
+            max-width: 80%; /* Устанавливаем максимальную ширину кнопки */
+            white-space: nowrap; /* Не даем тексту перенестись на несколько строк */
+            overflow: hidden; /* Скрываем текст, если он не помещается */
+            text-overflow: ellipsis; /* Добавляем многоточие, если текст длинный */
         }
 
         button:hover {
             background-color: darkgreen;
+        }
+
+        @media (max-width: 480px) {
+            button {
+                font-size: 16px;  /* Уменьшаем шрифт на маленьких экранах */
+                padding: 8px 16px;  /* Меньше отступов для мобильных устройств */
+            }
         }
     </style>
 </head>
