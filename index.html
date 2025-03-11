@@ -1,52 +1,42 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flappy Bird TG</title>
-    <script src="script.js" defer></script>
-    <style>
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #70c5ce;
-            margin: 0;
-        }
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(to bottom, #87CEEB, #1E90FF); /* Плавный градиент от светло-голубого к небесно-голубому */
+    margin: 0;
+}
 
-        button {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 20px;
-            background-color: green;
-            color: white;
-            font-size: 18px;  /* Уменьшаем размер шрифта */
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            display: none; /* Кнопка скрыта по умолчанию */
-            max-width: 80%; /* Устанавливаем максимальную ширину кнопки */
-            white-space: nowrap; /* Не даем тексту перенестись на несколько строк */
-            overflow: hidden; /* Скрываем текст, если он не помещается */
-            text-overflow: ellipsis; /* Добавляем многоточие, если текст длинный */
-        }
+button {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    background: linear-gradient(to bottom, #4CAF50, #388E3C); /* Градиент для кнопки */
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: none;
+    max-width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Тень для объема */
+    transition: 0.3s ease-in-out;
+}
 
-        button:hover {
-            background-color: darkgreen;
-        }
+button:hover {
+    background: linear-gradient(to bottom, #45A049, #2E7D32); /* Изменение цвета при наведении */
+    transform: translateX(-50%) scale(1.05);
+}
 
-        @media (max-width: 480px) {
-            button {
-                font-size: 16px;  /* Уменьшаем шрифт на маленьких экранах */
-                padding: 8px 16px;  /* Меньше отступов для мобильных устройств */
-            }
-        }
-    </style>
-</head>
-<body>
-    <button id="restartButton">Начать заново</button> <!-- Кнопка для перезапуска -->
-</body>
-</html>
+@media (max-width: 480px) {
+    button {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+}
