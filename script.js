@@ -39,10 +39,10 @@ function saveBirdColor(color) {
 // Функция для загрузки цвета птички
 function getSavedBirdColor() {
     const savedColor = localStorage.getItem("birdColor");
-    return savedColor ? savedColor : "#FF0";  // Если нет сохранённого цвета, по умолчанию желтый
+    return savedColor ? savedColor : "#FF0000";  // Если нет сохранённого цвета, по умолчанию красный
 }
 
-// Получаем цвет птички из localStorage или используем желтый по умолчанию
+// Получаем цвет птички из localStorage или используем красный по умолчанию
 let birdColor = getSavedBirdColor();
 
 // Функция для изменения цвета птички
