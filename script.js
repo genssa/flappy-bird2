@@ -31,6 +31,38 @@ let lastPipeTime = Date.now();
 const restartButton = document.getElementById("restartButton");
 restartButton.style.display = "none";
 
+// Функция для сохранения цвета птички
+function saveBirdColor(color) {
+    localStorage.setItem("birdColor", color);
+}
+
+// Функция для загрузки цвета птички
+function getSavedBirdColor() {
+    const savedColor = localStorage.getItem("birdColor");
+    return savedColor ? savedColor : "#FF0";  // Если нет сохранённого цвета, по умолчанию желтый
+}
+
+// Получаем цвет птички из localStorage или используем желтый по умолчанию
+const birdColor = getSavedBirdColor();
+
+// Функция для изменения цвета птички
+function changeBirdColor(newColor) {
+    saveBirdColor(newColor);  // Сохраняем новый цвет
+}
+
+// Добавим кнопку для изменения цвета птички
+const colorChangeButton = document.createElement("button");
+colorChangeButton.textContent = "Изменить цвет птички";
+document.body.appendChild(colorChangeButton);
+
+// Вешаем обработчик на кнопку для изменения цвета птички
+colorChangeButton.addEventListener("click", () => {
+    const newColor = prompt("Введите новый цвет для птички (например, #FF6347):", birdColor);
+    if (newColor) {
+        changeBirdColor(newColor);  // Изменяем и сохраняем новый цвет
+    }
+});
+
 function flap() {
     if (gameRunning) {
         birdVelocity = jump;
@@ -104,7 +136,7 @@ function gameLoop() {
     ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
     ctx.beginPath();
     ctx.arc(50, birdY, 10, 0, Math.PI * 2);
-    ctx.fillStyle = "#FF6347";
+    ctx.fillStyle = birdColor;  // Используем сохранённый цвет птички
     ctx.fill();
     ctx.closePath();
 
