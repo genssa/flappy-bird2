@@ -51,7 +51,7 @@ function changeBirdColor(newColor) {
     saveBirdColor(newColor);  // Сохраняем новый цвет
 }
 
-// Создаём кнопку для изменения цвета птички
+// Создаем кнопку для изменения цвета птички
 const colorChangeButton = document.createElement("button");
 colorChangeButton.textContent = "Изменить цвет птички";
 colorChangeButton.style.position = "fixed";
@@ -66,6 +66,7 @@ colorChangeButton.style.borderRadius = "8px";
 colorChangeButton.style.cursor = "pointer";
 colorChangeButton.style.fontSize = "16px";
 colorChangeButton.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+colorChangeButton.style.zIndex = "9999"; // Убедитесь, что кнопка не будет скрыта за другими элементами
 document.body.appendChild(colorChangeButton);
 
 // Вешаем обработчик на кнопку для изменения цвета птички
