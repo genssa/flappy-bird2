@@ -43,16 +43,29 @@ function getSavedBirdColor() {
 }
 
 // Получаем цвет птички из localStorage или используем желтый по умолчанию
-const birdColor = getSavedBirdColor();
+let birdColor = getSavedBirdColor();
 
 // Функция для изменения цвета птички
 function changeBirdColor(newColor) {
+    birdColor = newColor;
     saveBirdColor(newColor);  // Сохраняем новый цвет
 }
 
-// Добавим кнопку для изменения цвета птички
+// Создаём кнопку для изменения цвета птички
 const colorChangeButton = document.createElement("button");
 colorChangeButton.textContent = "Изменить цвет птички";
+colorChangeButton.style.position = "fixed";
+colorChangeButton.style.bottom = "100px";
+colorChangeButton.style.left = "50%";
+colorChangeButton.style.transform = "translateX(-50%)";
+colorChangeButton.style.padding = "10px 20px";
+colorChangeButton.style.backgroundColor = "#28a745";
+colorChangeButton.style.color = "white";
+colorChangeButton.style.border = "none";
+colorChangeButton.style.borderRadius = "8px";
+colorChangeButton.style.cursor = "pointer";
+colorChangeButton.style.fontSize = "16px";
+colorChangeButton.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
 document.body.appendChild(colorChangeButton);
 
 // Вешаем обработчик на кнопку для изменения цвета птички
