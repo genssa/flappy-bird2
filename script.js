@@ -79,6 +79,7 @@ function checkCollisions() {
         if (50 + 10 > pipe.x && 50 - 10 < pipe.x + pipeWidth) {
             if (birdY < pipe.top || birdY + 10 > pipe.bottom) {
                 gameRunning = false; // Столкновение с трубой
+                showRestartButton(); // Показать кнопку "Начать заново"
             }
         }
     });
@@ -86,6 +87,16 @@ function checkCollisions() {
     // Проверка на столкновение с землей
     if (birdY > gameCanvas.height) {
         gameRunning = false;
+        showRestartButton(); // Показать кнопку "Начать заново"
+    }
+}
+
+// Функция для отображения кнопки "Начать заново"
+function showRestartButton() {
+    if (typeof Telegram !== "undefined" && Telegram.WebApp) {
+        const tg = Telegram.WebApp;
+        tg.MainButton.setText("Начать заново"); // Текст кнопки
+        tg.MainButton.show(); // Показать кнопку
     }
 }
 
@@ -96,13 +107,6 @@ function gameLoop() {
         ctx.font = "30px Arial";
         ctx.fillStyle = "#000";
         ctx.fillText("Игра окончена! Счет: " + score, 50, 240);
-
-        // Показываем кнопку "Начать заново" после окончания игры
-        if (typeof Telegram !== "undefined" && Telegram.WebApp) {
-            const tg = Telegram.WebApp;
-            tg.MainButton.setText("Начать заново"); // Текст кнопки
-            tg.MainButton.show(); // Показать кнопку
-        }
 
         return;
     }
