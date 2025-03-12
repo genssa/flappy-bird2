@@ -30,10 +30,6 @@ let pipeWidth = 50;
 let pipeInterval = 1500;
 let lastPipeTime = Date.now();
 
-// Загружаем изображение птички
-const birdImg = new Image();
-birdImg.src = "bird.png"; // Убедитесь, что файл bird.png загружен в проект
-
 // Функция для сохранения цвета птички
 function saveBirdColor(color) {
     console.log("Сохраняю цвет птички:", color);
@@ -44,7 +40,7 @@ function saveBirdColor(color) {
 function getSavedBirdColor() {
     const savedColor = localStorage.getItem("birdColor");
     console.log("Загружен цвет птички из localStorage:", savedColor);
-    return savedColor ? savedColor : "#FF0000";
+    return savedColor ? savedColor : "#FF0000";  // Если нет сохранённого цвета, по умолчанию красный
 }
 
 // Получаем цвет птички из localStorage или используем красный по умолчанию
@@ -53,8 +49,34 @@ let birdColor = getSavedBirdColor();
 // Функция для изменения цвета птички
 function changeBirdColor(newColor) {
     birdColor = newColor;
-    saveBirdColor(newColor);
+    saveBirdColor(newColor);  // Сохраняем новый цвет
 }
+
+// Создаем кнопку для изменения цвета птички
+const colorChangeButton = document.createElement("button");
+colorChangeButton.textContent = "Изменить цвет птички";
+colorChangeButton.style.position = "fixed";
+colorChangeButton.style.bottom = "100px";
+colorChangeButton.style.left = "50%";
+colorChangeButton.style.transform = "translateX(-50%)";
+colorChangeButton.style.padding = "10px 20px";
+colorChangeButton.style.backgroundColor = "#28a745";
+colorChangeButton.style.color = "white";
+colorChangeButton.style.border = "none";
+colorChangeButton.style.borderRadius = "8px";
+colorChangeButton.style.cursor = "pointer";
+colorChangeButton.style.fontSize = "16px";
+colorChangeButton.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+colorChangeButton.style.zIndex = "9999"; // Убедитесь, что кнопка не будет скрыта за другими элементами
+document.body.appendChild(colorChangeButton);
+
+// Вешаем обработчик на кнопку для изменения цвета птички
+colorChangeButton.addEventListener("click", () => {
+    const newColor = prompt("Введите новый цвет для птички (например, #FF6347):", birdColor);
+    if (newColor) {
+        changeBirdColor(newColor);  // Изменяем и сохраняем новый цвет
+    }
+});
 
 // Функция для изменения положения птички
 function flap() {
@@ -94,8 +116,8 @@ function updatePipes() {
 // Функция для проверки коллизий
 function checkCollisions() {
     pipes.forEach((pipe) => {
-        if (50 + 20 > pipe.x && 50 - 20 < pipe.x + pipeWidth) {
-            if (birdY < pipe.top || birdY + 20 > pipe.bottom) {
+        if (50 + 10 > pipe.x && 50 - 10 < pipe.x + pipeWidth) {
+            if (birdY < pipe.top || birdY + 10 > pipe.bottom) {
                 endGame();
             }
         }
@@ -106,7 +128,21 @@ function checkCollisions() {
 // Функция для окончания игры
 function endGame() {
     gameRunning = false;
+    showRestartButton();
 }
+
+// Отображаем кнопку перезапуска
+function showRestartButton() {
+    restartButton.style.display = "block";
+}
+
+// Перезапуск игры
+const restartButton = document.getElementById("restartButton");
+restartButton.style.display = "none";
+
+restartButton.addEventListener("click", () => {
+    location.reload();
+});
 
 // Основной игровой цикл
 function gameLoop() {
@@ -124,13 +160,29 @@ function gameLoop() {
     if (birdY > gameCanvas.height) birdY = gameCanvas.height;
 
     ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-    
-    // Рисуем птичку с изображением
-    ctx.drawImage(birdImg, 40, birdY, 40, 40);
 
-    ctx.font = "20px Arial";
+    // Рисуем птичку (тело, крыло, глаз, клюв)
+    ctx.fillStyle = birdColor;
+    ctx.beginPath();
+    ctx.arc(50, birdY, 12, 0, Math.PI * 2); // Тело
+    ctx.fill();
+
+    ctx.fillStyle = "#FFA500";
+    ctx.beginPath();
+    ctx.moveTo(62, birdY - 2); // Клюв
+    ctx.lineTo(68, birdY);
+    ctx.lineTo(62, birdY + 2);
+    ctx.fill();
+
     ctx.fillStyle = "#000";
-    ctx.fillText("Счет: " + score, 10, 30);
+    ctx.beginPath();
+    ctx.arc(55, birdY - 5, 2, 0, Math.PI * 2); // Глаз
+    ctx.fill();
+
+    ctx.fillStyle = birdColor;
+    ctx.beginPath();
+    ctx.arc(45, birdY, 6, Math.PI / 4, (3 * Math.PI) / 4); // Крыло
+    ctx.fill();
 
     updatePipes();
 
