@@ -163,9 +163,9 @@ restartButton.addEventListener("click", () => {
 function gameLoop() {
     if (!gameRunning) {
         ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-        ctx.font = "20px Arial";  // Уменьшаем размер шрифта
+        ctx.font = "10px Arial";  // Уменьшаем размер шрифта до 10px
         ctx.fillStyle = "#000";
-        ctx.fillText("Игра окончена! Счёт: " + score, 50, 240); // Отображаем текст с меньшим размером шрифта
+        ctx.fillText("Игра окончена! Счёт: " + score, 50, 240); // Отображаем текст с шрифтом 10px
         return;
     }
 
