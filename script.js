@@ -20,7 +20,7 @@ document.body.appendChild(gameCanvas);
 
 let birdY = 150;
 let birdVelocity = 0;
-const gravity = 1;
+const gravity = 0.7;
 const jump = -25;
 let pipes = [];
 let score = 0;
