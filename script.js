@@ -52,14 +52,31 @@ function changeBirdColor(newColor) {
     saveBirdColor(newColor);  // Сохраняем новый цвет
 }
 
-// Принудительное обновление кода
-const CACHE_VERSION = "v2";
-localStorage.setItem("cacheVersion", CACHE_VERSION);
-if (localStorage.getItem("cacheVersion") !== CACHE_VERSION) {
-    localStorage.clear();
-    localStorage.setItem("cacheVersion", CACHE_VERSION);
-    location.reload();
-}
+// Создаем кнопку для изменения цвета птички
+const colorChangeButton = document.createElement("button");
+colorChangeButton.textContent = "Изменить цвет птички";
+colorChangeButton.style.position = "fixed";
+colorChangeButton.style.bottom = "100px";
+colorChangeButton.style.left = "50%";
+colorChangeButton.style.transform = "translateX(-50%)";
+colorChangeButton.style.padding = "10px 20px";
+colorChangeButton.style.backgroundColor = "#28a745";
+colorChangeButton.style.color = "white";
+colorChangeButton.style.border = "none";
+colorChangeButton.style.borderRadius = "8px";
+colorChangeButton.style.cursor = "pointer";
+colorChangeButton.style.fontSize = "16px";
+colorChangeButton.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+colorChangeButton.style.zIndex = "9999"; // Убедитесь, что кнопка не будет скрыта за другими элементами
+document.body.appendChild(colorChangeButton);
+
+// Вешаем обработчик на кнопку для изменения цвета птички
+colorChangeButton.addEventListener("click", () => {
+    const newColor = prompt("Введите новый цвет для птички (например, #FF6347):", birdColor);
+    if (newColor) {
+        changeBirdColor(newColor);  // Изменяем и сохраняем новый цвет
+    }
+});
 
 // Функция для изменения положения птички
 function flap() {
@@ -111,15 +128,44 @@ function checkCollisions() {
 // Функция для окончания игры
 function endGame() {
     gameRunning = false;
+    showRestartButton();
 }
+
+// Отображаем кнопку перезапуска
+function showRestartButton() {
+    restartButton.style.display = "block";
+}
+
+// Перезапуск игры
+const restartButton = document.createElement("button");
+restartButton.textContent = "Начать заново";
+restartButton.style.position = "fixed";
+restartButton.style.bottom = "50px";
+restartButton.style.left = "50%";
+restartButton.style.transform = "translateX(-50%)";
+restartButton.style.padding = "10px 20px";
+restartButton.style.backgroundColor = "#007bff";
+restartButton.style.color = "white";
+restartButton.style.border = "none";
+restartButton.style.borderRadius = "8px";
+restartButton.style.cursor = "pointer";
+restartButton.style.fontSize = "14px"; // Уменьшаем размер шрифта
+restartButton.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+restartButton.style.zIndex = "9999"; // Убедитесь, что кнопка не будет скрыта за другими элементами
+restartButton.style.display = "none"; // Изначально скрыта
+document.body.appendChild(restartButton);
+
+restartButton.addEventListener("click", () => {
+    location.reload(); // Перезагрузка страницы для перезапуска игры
+});
 
 // Основной игровой цикл
 function gameLoop() {
     if (!gameRunning) {
         ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-        ctx.font = "30px Arial";
+        ctx.font = "20px Arial";  // Уменьшаем размер шрифта
         ctx.fillStyle = "#000";
-        ctx.fillText("Игра окончена! Счет: " + score, 50, 240);
+        ctx.fillText("Игра окончена! Счёт: " + score, 50, 240); // Отображаем текст с меньшим размером шрифта
         return;
     }
 
